@@ -1,0 +1,283 @@
+<mat-card class="outer">
+  <h1><b>Employee List</b></h1>
+  <div>
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="#">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+        <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+      </ng-container>
+      <ng-container matColumnDef="noFilter">
+        <th mat-header-cell *matHeaderCellDef></th>
+      </ng-container>
+      <ng-container matColumnDef="empName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Name</b></th>
+        <td mat-cell *matCellDef="let row">{{ row.empName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="empNameFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <input
+            matInput
+            [(ngModel)]="name"
+            placeholder="Search By Name"
+            #input
+          />
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="jobTitle">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <b> Job Title </b>
+        </th>
+        <td mat-cell *matCellDef="let row">{{ row.jobTitle }}</td>
+      </ng-container>
+      <ng-container matColumnDef="jobTitleFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-form-field appearance="outline">
+            <mat-label></mat-label>
+            <mat-select [(ngModel)]="jobTitle">
+              <mat-option value="Software Developer"
+                >Software Developer</mat-option
+              >
+              <mat-option value="Manager">Manager</mat-option>
+              <mat-option value="Tech Lead">Tech Lead</mat-option>
+              <mat-option value="Quality Analyst">Quality Analyst</mat-option>
+              <mat-option value="UI Designer">UI Designer</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="age">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Age</b></th>
+        <td mat-cell *matCellDef="let row">{{ row.age }}</td>
+      </ng-container>
+      <ng-container matColumnDef="ageFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <input matInput [(ngModel)]="age" placeholder="Age" #input />
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <b>Start Date</b>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.startDate | date: "dd/MM/yyyy" }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="startDateFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <input
+            [(ngModel)]="startDate"
+            type="date"
+            id="startDateFilter"
+            name="startDateFilter"
+          />
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <b>End Date</b>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="row.endDate"
+            >{{ row.endDate | date: "dd/MM/yyyy" }}
+          </span>
+          <span
+            style="
+              background: green;
+              color: white;
+              border-radius: 5px;
+              padding: 6px;
+            "
+            *ngIf="!row.endDate"
+          >
+            Currently Working
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="endDateFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <input
+            [(ngModel)]="endDate"
+            type="date"
+            id="endDateFilter"
+            name="endDateFilter"
+          />
+        </th>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Action
+          <button (click)="addItem()" class="fabicon" mat-mini-fab color="blue">
+            <mat-icon>person_add</mat-icon>
+          </button>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <button
+            (click)="viewDetail(row)"
+            class="fabicon"
+            mat-mini-fab
+            color="blue"
+          >
+            <mat-icon>remove_red_eye</mat-icon>
+          </button>
+          <button
+            (click)="deleteItem(row)"
+            class="fabicon"
+            mat-mini-fab
+            color="blue"
+          >
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </td> </ng-container
+      ><ng-container matColumnDef="actionFilter">
+        <th mat-header-cell *matHeaderCellDef>
+          <button (click)="search()" class="fabicon" mat-mini-fab color="blue">
+            <mat-icon>filter_list</mat-icon>
+          </button>
+          <button (click)="clear()" class="fabicon" mat-mini-fab color="blue">
+            <mat-icon>close</mat-icon>
+          </button>
+        </th>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="tableColoumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: tableColoumns"></tr>
+      <tr
+        mat-header-row
+        *matHeaderRowDef="[
+          'noFilter',
+          'empNameFilter',
+          'jobTitleFilter',
+          'ageFilter',
+          'startDateFilter',
+          'endDateFilter',
+          'actionFilter'
+        ]"
+        class="example-second-header-row"
+      ></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="6">No data</td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page of users"
+    ></mat-paginator>
+  </div>
+</mat-card>
+
+<ng-template #addDialog>
+  <form [formGroup]="empForm" (ngSubmit)="onSubmit(empForm)">
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Employee Name</mat-label>
+        <input matInput formControlName="empName" placeholder="Employee name" />
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Job Title</mat-label>
+        <mat-select formControlName="jobTitle">
+          <mat-option value="Software Developer">Software Developer</mat-option>
+          <mat-option value="Manager">Manager</mat-option>
+          <mat-option value="Tech Lead">Tech Lead</mat-option>
+          <mat-option value="Quality Analyst">Quality Analyst</mat-option>
+          <mat-option value="UI Designer">UI Designer</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Age</mat-label>
+        <input
+          matInput
+          type="number"
+          maxlength="2"
+          formControlName="age"
+          placeholder="Age"
+        />
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input
+          type="date"
+          matInput
+          formControlName="startDate"
+          placeholder="Start Date"
+        />
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <span style="font-size: 10px; float: right; color: darkblue"
+        >Leave blank if Currently Working</span
+      ><br />
+      <mat-form-field appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input
+          matInput
+          type="date"
+          formControlName="endDate"
+          placeholder="End Date"
+        />
+      </mat-form-field>
+    </div>
+    <button mat-raised-button type="submit">Submit</button>
+  </form>
+</ng-template>
+<ng-template #viewDialog>
+  <form [formGroup]="empForm">
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Employee name</mat-label>
+        <input
+          readonly
+          matInput
+          formControlName="empName"
+          placeholder="Employee name"
+        />
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Job Title</mat-label>
+
+        <input matInput readonly formControlName="jobTitle" />
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Age</mat-label>
+        <input readonly matInput formControlName="age" placeholder="Age" />
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label
+        ><input
+          style="display: none"
+          readonly
+          matInput
+          formControlName="startDate"
+        />
+        <span>
+          {{ empForm.controls.startDate.value | date: "dd/MM/yyyy" }}
+        </span>
+      </mat-form-field>
+    </div>
+    <div class="inputBox">
+      <mat-form-field appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input
+          style="display: none"
+          readonly
+          matInput
+          formControlName="endDate"
+        />
+        <span>
+          {{ empForm.controls.endDate.value | date: "dd/MM/yyyy" }}
+        </span>
+      </mat-form-field>
+    </div>
+  </form>
+</ng-template>
