@@ -1,5 +1,7 @@
 # EmpApp
 
+![Alt text](/1.jpg?raw=true "Optional Title")
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.2.
 
 ## Development server
