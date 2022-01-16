@@ -1,8 +1,8 @@
 # EmpApp
 
-![Alt text](1.png?raw=true "Screen 1" | width=40)
-![Alt text](1.png?raw=true "Screen 2"| width=40)
-![Alt text](1.png?raw=true "Screen 3"| width=40)
+![Alt text](1.png?raw=true| width=40 "Screen 1")
+![Alt text](1.png?raw=true| width=40 "Screen 2")
+![Alt text](1.png?raw=true| width=40 "Screen 3")
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.1.2.
 
